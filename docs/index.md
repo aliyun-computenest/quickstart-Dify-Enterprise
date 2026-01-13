@@ -99,7 +99,7 @@ Dify 企业版需要使用容器镜像仓库来存储和管理插件镜像。 �
 
 部分没有兼容问题的版本可以在计算巢一键升级，若两个版本间存在Non-skippable的版本，或者存在兼容问题，推荐手动升级。
 
-Dify-Helm-Release: https://langgenius.github.io/dify-helm/#/
+详情请参考：[Dify-Helm-Release](https://langgenius.github.io/dify-helm/#/)
 
 ### 方式一：在计算巢一键升级
 **注意**：如果手动修改过集群中helm values等配置，在计算巢一键升级后，会覆盖手动修改的配置。
@@ -112,13 +112,16 @@ Dify-Helm-Release: https://langgenius.github.io/dify-helm/#/
 2. 在ACK控制台获取到对应的KubeConfig, 配置到本地或远程机器上，通过kubectl 连接 Kubernetes 集群
 ![img_17.png](img_17.png)
 3. 添加helm仓库信息
-   `helm repo add dify https://langgenius.github.io/dify-helm
-   `
-   `helm repo update
-   `
+   ```
+   helm repo add dify https://langgenius.github.io/dify-helm
+   ```
+   ```
+   helm repo update
+   ```
 4. 导出当前生效的helm values
-`helm get values ack-dify -n dify-system -o yaml > current-values.yaml
-`
+   ```
+   helm get values ack-dify -n dify-system -o yaml > current-values.yaml
+   ```
 5. 更新helm values的配置：
     将上个步骤中获取的current-values.yaml中的内容相比要升级的chart版本进行更新，主要是更新image的配置。 可以diff下两个版本之间的values.yaml，将current-values.yaml中的image配置更新为要升级的chart版本对应的image配置，
     比如当前current-values.yaml中需要更新的部分内容如下：
@@ -127,6 +130,10 @@ Dify-Helm-Release: https://langgenius.github.io/dify-helm/#/
    - 需要更新current-values.yaml文件中所有的需要更新的镜像配置，否则升级后还是会使用老版本的镜像。
    - values.yaml中默认使用的repository：langgenius, 在国内地域可能会拉不下来，可以使用仓库g-hsod9681-docker.pkg.coding.net
 6. 执行升级操作，version为要升级的chart版本
-`helm upgrade ack-dify -f curent-values.yaml -n dify-system dify/dify --version 3.7.3`
-7. 升级失败后，如果要回滚到老版本，可以回滚到上一版本
-   `helm rollback ack-dify -n ack-system`
+   ```
+   helm upgrade ack-dify -f curent-values.yaml -n dify-system dify/dify --version 3.7.3
+   ```
+8. 升级失败后，如果要回滚到老版本，可以回滚到上一版本
+   ```
+   helm rollback ack-dify -n ack-system
+   ```
